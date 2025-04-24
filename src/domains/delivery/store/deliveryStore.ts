@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
 import {
   DeliveryState,
   DeliveryType,
@@ -10,7 +11,7 @@ import {
 interface DeliveryStore extends DeliveryState {
   setDeliveryType: (type: DeliveryType) => void
   setDestination: (type: DestinationType) => void
-  setItem: (type: ItemType) => void
+  setItem: (type: Partial<ItemType>) => void
   reset: () => void
 }
 
@@ -20,10 +21,26 @@ const initialState: DeliveryState = {
   itemType: null,
 }
 
-export const useDeliveryStore = create<DeliveryStore>((set) => ({
-  ...initialState,
-  setDeliveryType: (type) => set({ deliveryType: type }),
-  setDestination: (type) => set({ destinationType: type }),
-  setItem: (type) => set({ itemType: type }),
-  reset: () => set(initialState),
-}))
+export const MobileContainer = () => {}
+export const useDeliveryStore = create<DeliveryStore>()(
+  devtools(
+    (set) => ({
+      ...initialState,
+      setDeliveryType: (type) => set({ deliveryType: type }),
+      setDestination: (type) => set({ destinationType: type }),
+      setItem: (type) =>
+        set((prev) => {
+          console.log('prev', prev, type)
+          return {
+            ...prev,
+            itemType: {
+              ...prev.itemType,
+              ...type,
+            },
+          }
+        }),
+      reset: () => set(initialState),
+    }),
+    { name: 'Delivery Store' },
+  ),
+)
