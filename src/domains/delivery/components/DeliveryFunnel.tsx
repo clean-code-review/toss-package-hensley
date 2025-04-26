@@ -1,9 +1,8 @@
-import { FC } from 'react'
 import { Funnel } from '@/components/funnel'
 import { useDeliverySteps } from '../hooks/useDeliverySteps'
 import { SelectDeliveryType } from './SelectDeliveryType'
 
-export const DeliveryFunnel: FC = () => {
+export const DeliveryFunnel = () => {
   const { handleDeliveryTypeSelect } = useDeliverySteps()
 
   return (
