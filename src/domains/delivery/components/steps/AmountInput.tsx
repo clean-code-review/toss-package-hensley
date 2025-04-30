@@ -59,13 +59,6 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
       }
 
       if (value !== previousValueRef.current) {
-        //타이핑 할 때를 말하는건가?
-        console.log(
-          '타이핑 할 때를 말하는건가?',
-          value,
-          previousValueRef.current,
-        )
-
         previousValueRef.current = value
         setDisplayValue(serialize(value))
       }
