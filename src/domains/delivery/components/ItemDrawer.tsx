@@ -4,11 +4,11 @@ import { DestinationType, ItemCategory, ItemType } from '../types'
 
 export type ItemDrawerProps = DrawerProps & {
   destinationType: DestinationType
-  onClick: (itemCategory: ItemType['itemCategory']) => void
+  onSelect: (itemCategory: ItemType['itemCategory']) => void
 }
 
 export const ItemDrawer = ({
-  onClick,
+  onSelect,
   destinationType,
   ...props
 }: ItemDrawerProps) => {
@@ -38,7 +38,7 @@ export const ItemDrawer = ({
                 variant={'ghost'}
                 value={option}
                 key={option}
-                onClick={() => onClick(option)}
+                onClick={() => onSelect(option)}
               >
                 {option}
               </Button>

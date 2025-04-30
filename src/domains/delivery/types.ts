@@ -4,6 +4,8 @@ export type ItemType = {
   itemCategory: ItemCategories
   itemAmount: number | null
   itemWeight: number | null
+  itemPrice: number | null
+  itemDescription: string | null
 }
 
 export const ItemCategory = {
