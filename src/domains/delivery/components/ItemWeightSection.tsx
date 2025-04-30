@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input'
-import { useDeliveryStore } from '../../store/deliveryStore'
+import { useDeliveryStore } from '../store/deliveryStore'
 import { useRef } from 'react'
 
 interface ItemWeightSectionProps {

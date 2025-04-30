@@ -33,7 +33,7 @@ export const ItemDrawer = ({
         <Heading as="h2">어떤 물건을 보낼까요?</Heading>
         <div className="gap-2">
           {options(destinationType).map((option) => (
-            <div>
+            <div key={option}>
               <Button
                 variant={'ghost'}
                 value={option}

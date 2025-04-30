@@ -3,7 +3,7 @@ import { useFunnel } from '@/components/funnel/useFunnel'
 import { DeliveryType, DestinationType, ItemType } from '../types'
 
 export const useDeliverySteps = () => {
-  const { setDeliveryType, setDestination, setItem } = useDeliveryStore()
+  const { setDeliveryType, setDestination } = useDeliveryStore()
   const { setCurrentStep, currentStep: currentFunnel } = useFunnel()
   const createStepHandler = <
     T extends DeliveryType | DestinationType | ItemType,
@@ -12,7 +12,6 @@ export const useDeliverySteps = () => {
     currentStep?: string,
   ) => {
     return (value: T) => {
-      console.log('currentStep', currentFunnel)
       if (setState && typeof setState === 'function') {
         setState?.(value)
       }
