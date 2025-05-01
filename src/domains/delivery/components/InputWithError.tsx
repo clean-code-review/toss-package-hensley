@@ -1,12 +1,10 @@
-import { ChangeEvent, ComponentProps, RefObject } from 'react'
+import { ComponentProps } from 'react'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 
 export interface InputWithErrorProps extends ComponentProps<'input'> {
   error?: string
   isLoading?: boolean
-  ref?: RefObject<HTMLInputElement | null>
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 /** view component */
 export const InputWithError = ({
