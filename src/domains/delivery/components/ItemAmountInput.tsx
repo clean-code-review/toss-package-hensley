@@ -6,7 +6,7 @@ import { RefObject } from 'react'
 interface ItemAmountInputProps {
   placeholder: string
   disabled?: boolean
-  amountRef: RefObject<HTMLInputElement> | null
+  amountRef: RefObject<HTMLInputElement | null>
 }
 /* */
 export const ItemAmountInput = ({

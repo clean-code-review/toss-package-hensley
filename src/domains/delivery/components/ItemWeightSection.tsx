@@ -11,7 +11,7 @@ export const ItemWeightSection = ({
   visible,
   onFocus,
 }: ItemWeightSectionProps) => {
-  const { itemType, setItem } = useDeliveryStore()
+  const { itemType } = useDeliveryStore()
   const weightRef = useRef<HTMLInputElement>(null)
 
   if (!visible) return null

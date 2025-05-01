@@ -10,30 +10,37 @@ import { ItemCategoryInput } from '../ItemCategoryInput'
 import { DamageAgreementDrawer } from './DamageAgreementDrawer'
 
 interface SelectItemProps {
-  onSelect: (type: ItemType) => void
+  onSelect: (type?: ItemType) => void
 }
 
 export const SelectItem = ({ onSelect }: SelectItemProps) => {
   const { destinationType, itemType, setItem } = useDeliveryStore()
-  const amountRef = useRef<HTMLInputElement>(null)
+  const amountRef = useRef<HTMLInputElement | null>(null)
   const weightRef = useRef<HTMLInputElement>(null)
+  //TODO : 모달의 상태 변경이 특정 핸들러 내에 너무 의존적임. 개선필요
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false)
   const [weightDrawerOpen, setWeightDrawerOpen] = useState(false)
-  const [amountConfirmed, setAmountConfirmed] = useState(false)
   const [damageAgreementDrawerOpen, setDamageAgreementDrawerOpen] =
     useState(false)
+  const [amountConfirmed, setAmountConfirmed] = useState(false)
+
   // derived state
   const categoryConfirmed = !!itemType?.itemCategory
   if (!destinationType) {
     //제일 앞 페이지로 이동
     return
   }
-
+  // useEffect(() => {
+  //   console.log('useeffct')
+  //   if (amountRef?.current && categoryConfirmed) {
+  //     amountRef.current?.focus()
+  //     console.log('amountRef.current', amountRef.current)
+  //   }
+  // }, [categoryConfirmed])
   const handleItemCategorySelect = (itemCategory: ItemType['itemCategory']) => {
+    console.log('category누름', amountRef)
     setItem({ itemCategory })
     setCategoryDrawerOpen(false)
-    //focus 처리
-    amountRef.current?.focus()
   }
   const handleAmountConfirm = () => {
     setAmountConfirmed(true)
@@ -75,7 +82,7 @@ export const SelectItem = ({ onSelect }: SelectItemProps) => {
       <ItemCategoryInput onFocus={() => setCategoryDrawerOpen(true)} />
 
       <Button
-        onClick={() => console.log('다음 단계로 이동')}
+        onClick={() => onSelect()}
         disabled={
           !itemType?.itemCategory ||
           !itemType?.itemAmount ||

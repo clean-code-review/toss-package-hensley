@@ -3,11 +3,12 @@ import { ItemAmountInput } from './ItemAmountInput'
 import { useDeliveryStore } from '../store/deliveryStore'
 import { AddAmountButtons } from './AddAmountButtons'
 import { RefObject } from 'react'
+import { useFocusEffect } from '@/hooks/useFocusEffect.tsx'
 
 interface ItemAmountSectionProps {
   visible: boolean
   onConfirm: () => void
-  amountRef: RefObject<HTMLInputElement> | null
+  amountRef: RefObject<HTMLInputElement | null>
 }
 
 export const ItemAmountSection = ({
@@ -16,7 +17,7 @@ export const ItemAmountSection = ({
   amountRef,
 }: ItemAmountSectionProps) => {
   const { itemType, setItem } = useDeliveryStore()
-
+  useFocusEffect(amountRef, visible)
   const handleConfirm = () => {
     onConfirm()
   }
@@ -24,10 +25,11 @@ export const ItemAmountSection = ({
   if (!visible) return null
   return (
     <div className="flex flex-col gap-2">
-      <ItemAmountInput placeholder="물건금액" amountRef={amountRef} />
+      <ItemAmountInput amountRef={amountRef} placeholder="물건금액" />
       <AddAmountButtons
-        onAddAmount={(amount) =>
-          setItem({ itemAmount: (itemType?.itemAmount ?? 0) + amount })
+        onAddAmount={
+          (amount) =>
+            setItem({ itemAmount: (itemType?.itemAmount ?? 0) + amount }) //TODO: 가독성, selector 고려 ?
         }
       />
 
