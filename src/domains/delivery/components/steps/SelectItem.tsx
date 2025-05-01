@@ -1,61 +1,106 @@
-import { Heading } from '@hensley-ui/ui'
+import { Button, Heading } from '@hensley-ui/ui'
 import { ItemType } from '../../types'
-import { Input } from '@/components/ui/input'
 import { ItemDrawer } from '../ItemDrawer'
 import { useDeliveryStore } from '../../store/deliveryStore'
 import { useEffect, useRef, useState } from 'react'
-//TODO: 물건카테고리를 포커스하면 다이얼로그가 열려야 한다.
+import { ItemAmountSection } from '../ItemAmountSection'
+import { ItemWeightSection } from '../ItemWeightSection'
+import { ItemWeightDrawer, WeightPrice } from '../ItemWeightDrawer'
+import { ItemCategoryInput } from '../ItemCategoryInput'
+import { DamageAgreementDrawer } from './DamageAgreementDrawer'
+
 interface SelectItemProps {
-  onSelect: (type: ItemType) => void
+  onSelect: (type?: ItemType) => void
 }
 
 export const SelectItem = ({ onSelect }: SelectItemProps) => {
   const { destinationType, itemType, setItem } = useDeliveryStore()
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const amountRef = useRef<HTMLInputElement>(null)
+  const amountRef = useRef<HTMLInputElement | null>(null)
+  const weightRef = useRef<HTMLInputElement>(null)
+  //TODO : 모달의 상태 변경이 특정 핸들러 내에 너무 의존적임. 개선필요
+  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false)
+  const [weightDrawerOpen, setWeightDrawerOpen] = useState(false)
+  const [damageAgreementDrawerOpen, setDamageAgreementDrawerOpen] =
+    useState(false)
+  const [amountConfirmed, setAmountConfirmed] = useState(false)
 
+  // derived state
+  const categoryConfirmed = !!itemType?.itemCategory
   if (!destinationType) {
     //제일 앞 페이지로 이동
     return
   }
-
+  // useEffect(() => {
+  //   console.log('useeffct')
+  //   if (amountRef?.current && categoryConfirmed) {
+  //     amountRef.current?.focus()
+  //     console.log('amountRef.current', amountRef.current)
+  //   }
+  // }, [categoryConfirmed])
   const handleItemCategorySelect = (itemCategory: ItemType['itemCategory']) => {
-    console.log('선택된 카테고리:', itemCategory)
+    console.log('category누름', amountRef)
     setItem({ itemCategory })
-    setIsDrawerOpen(false)
+    setCategoryDrawerOpen(false)
+  }
+  const handleAmountConfirm = () => {
+    setAmountConfirmed(true)
+    setWeightDrawerOpen(true)
+    //focus 처리
+    weightRef.current?.focus()
+  }
+  const handleWeightSelect = (weightPrice: WeightPrice) => {
+    setItem({
+      itemWeight: weightPrice.weight,
+      itemPrice: weightPrice.price,
+      itemDescription: weightPrice.description,
+    })
+    setWeightDrawerOpen(false)
+    setDamageAgreementDrawerOpen(true)
   }
 
+  const firstMount = useRef(true)
+
   useEffect(() => {
-    if (amountRef.current && itemType?.itemCategory) {
-      console.log('')
-      amountRef.current.focus()
+    if (firstMount.current) {
+      setCategoryDrawerOpen(true)
+      firstMount.current = false
     }
-  }, [itemType?.itemCategory])
+  }, [categoryDrawerOpen])
 
   return (
     <>
-      <div>
-        <Heading as="h2">보내는 물건의 정보를 알려주세요</Heading>
-        {itemType?.itemCategory && (
-          <Input
-            ref={amountRef}
-            type="number"
-            value={itemType.itemAmount ?? ''}
-          />
-        )}
-        <Input
-          placeholder="물건 정보"
-          value={itemType?.itemCategory ?? ''}
-          readOnly
-          onFocus={() => setIsDrawerOpen(true)}
-        />
-      </div>
-      {/*  주소/편의점 마다 아이템 카테고리가 다름 */}
-      <ItemDrawer
-        defaultOpen={isDrawerOpen}
-        destinationType={destinationType}
-        onClick={handleItemCategorySelect}
+      <Heading as="h2">보내는 물건의 정보를 알려주세요</Heading>
+      <ItemWeightSection
+        visible={amountConfirmed}
+        onFocus={() => setWeightDrawerOpen(true)}
       />
+      <ItemAmountSection
+        amountRef={amountRef}
+        visible={categoryConfirmed}
+        onConfirm={handleAmountConfirm}
+      />
+      <ItemCategoryInput onFocus={() => setCategoryDrawerOpen(true)} />
+
+      <Button
+        onClick={() => onSelect()}
+        disabled={
+          !itemType?.itemCategory ||
+          !itemType?.itemAmount ||
+          !itemType?.itemWeight
+        }
+      >
+        다음
+      </Button>
+
+      <ItemDrawer
+        open={
+          categoryDrawerOpen
+        } /** condition if first mounted, focus on input */
+        destinationType={destinationType}
+        onSelect={handleItemCategorySelect}
+      />
+      <ItemWeightDrawer open={weightDrawerOpen} onSelect={handleWeightSelect} />
+      <DamageAgreementDrawer open={damageAgreementDrawerOpen} />
     </>
   )
 }

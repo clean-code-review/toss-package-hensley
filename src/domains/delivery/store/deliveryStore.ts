@@ -30,7 +30,6 @@ export const useDeliveryStore = create<DeliveryStore>()(
       setDestination: (type) => set({ destinationType: type }),
       setItem: (type) =>
         set((prev) => {
-          console.log('prev', prev, type)
           return {
             ...prev,
             itemType: {

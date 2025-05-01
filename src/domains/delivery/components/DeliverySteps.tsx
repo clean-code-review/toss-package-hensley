@@ -4,6 +4,7 @@ import { SelectDeliveryType } from './steps/SelectDeliveryType'
 import { SelectDestination } from './steps/SelectDestination'
 import { SelectItem } from './steps/SelectItem'
 
+// TODO : should support type for each step
 export const DeliverySteps = () => {
   const {
     handleDeliveryTypeSelect,
